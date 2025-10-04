@@ -34,19 +34,15 @@ export default function SearchBar({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === 'k') {
+      if (event.key === '/' && !isFocused) {
         event.preventDefault()
-        if (document.activeElement === inputRef.current) {
-          inputRef.current?.blur()
-        } else {
-          inputRef.current?.focus()
-        }
+        inputRef.current?.focus()
       }
     }
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  }, [isFocused])
 
   return (
     <div className={`relative transition-all duration-300 ${isFocused ? 'w-full' : 'w-48'}`}>
