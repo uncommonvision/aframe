@@ -23,7 +23,7 @@ export default function Header() {
         {/* Right side: Search Bar, Theme Toggle and User Menu */}
         <div className="flex items-center space-x-2 flex-1 justify-end ml-48">
           <SearchBar 
-            placeholder="Search items..." 
+            placeholder="Type / to search" 
             onSearch={handleSearch}
           />
           <ThemeToggle />

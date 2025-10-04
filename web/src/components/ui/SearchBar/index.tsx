@@ -7,7 +7,7 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ 
-  placeholder = "Search items...", 
+  placeholder = "Type / to search", 
   onSearch 
 }: SearchBarProps) {
   const [query, setQuery] = useState('')
@@ -56,7 +56,7 @@ export default function SearchBar({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="flex h-8 w-full rounded-md border border-input bg-background pl-9 pr-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-8 w-full rounded-md border border-input bg-background pl-9 pr-3 py-1 text-sm text-foreground/80 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
       />
     </div>
   )
