@@ -1,5 +1,5 @@
 import { Search } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 interface SearchBarProps {
   placeholder?: string
@@ -11,6 +11,8 @@ export default function SearchBar({
   onSearch 
 }: SearchBarProps) {
   const [query, setQuery] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -18,15 +20,43 @@ export default function SearchBar({
     onSearch?.(value)
   }
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(true)
+    e.target.select()
+  }
+  const handleBlur = () => setIsFocused(false)
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      e.target.blur()
+    }
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'k') {
+        event.preventDefault()
+        inputRef.current?.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   return (
-    <div className="relative max-w-sm w-full">
+    <div className={`relative transition-all duration-300 ${isFocused ? 'w-full' : 'w-48'}`}>
       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <input
+        ref={inputRef}
         type="text"
         value={query}
         onChange={handleInputChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="flex h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-8 w-full rounded-md border border-input bg-background pl-9 pr-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
       />
     </div>
   )

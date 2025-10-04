@@ -14,22 +14,18 @@ export default function Header() {
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* Left side: Logo and Title */}
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
             <Hexagon className="h-8 w-8 text-foreground" />
             <h1 className="text-xl font-bold text-foreground">Kubey</h1>
           </div>
         </div>
 
-        {/* Center: Search Bar */}
-        <div className="flex-1 max-w-md mx-8">
+        {/* Right side: Search Bar, Theme Toggle and User Menu */}
+        <div className="flex items-center space-x-2 flex-1 justify-end ml-48">
           <SearchBar 
             placeholder="Search items..." 
             onSearch={handleSearch}
           />
-        </div>
-
-        {/* Right side: Theme Toggle and User Menu */}
-        <div className="flex items-center space-x-2">
           <ThemeToggle />
           <UserMenu />
         </div>
