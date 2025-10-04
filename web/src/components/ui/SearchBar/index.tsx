@@ -36,7 +36,11 @@ export default function SearchBar({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === 'k') {
         event.preventDefault()
-        inputRef.current?.focus()
+        if (document.activeElement === inputRef.current) {
+          inputRef.current?.blur()
+        } else {
+          inputRef.current?.focus()
+        }
       }
     }
 

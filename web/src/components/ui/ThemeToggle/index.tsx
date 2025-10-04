@@ -18,6 +18,18 @@ export default function ThemeToggle() {
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 't') {
+        event.preventDefault()
+        toggleTheme()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [theme])
+
   const toggleTheme = () => {
     if (theme === 'light') {
       setTheme('dark')
