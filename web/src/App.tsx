@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { ThemeProvider } from "@/components/theme-provider"
 import { DefaultLayout } from "@/components/layout"
-import { ItemCard } from "@/components/ui"
+import { CardList } from "@/containers"
+import type { CardData } from "@/containers"
 
 // Sample data for demonstration
-const sampleItems = [
+const sampleItems: CardData[] = [
   {
     id: '1',
     title: 'React Framework',
@@ -40,12 +41,8 @@ const sampleItems = [
 function App() {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
 
-  const handleItemSelect = (id: string, selected: boolean) => {
-    setSelectedItems(prev => 
-      selected 
-        ? [...prev, id]
-        : prev.filter(itemId => itemId !== id)
-    )
+  const handleSelectionChange = (selectedIds: string[]) => {
+    setSelectedItems(selectedIds)
   }
 
   return (
@@ -59,25 +56,21 @@ function App() {
             <p className="text-lg text-muted-foreground">
               Select items to compare their features and capabilities.
             </p>
-            {selectedItems.length > 0 && (
-              <p className="text-sm text-primary mt-2">
-                {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
-              </p>
-            )}
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {sampleItems.map((item) => (
-              <ItemCard
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                description={item.description}
-                isSelected={selectedItems.includes(item.id)}
-                onSelect={handleItemSelect}
-              />
-            ))}
-          </div>
+          <CardList 
+            items={sampleItems}
+            selectedItems={selectedItems}
+            onSelectionChange={handleSelectionChange}
+            showSelectionCount={true}
+            emptyMessage="No frameworks available"
+            gridCols={{
+              default: 1,
+              sm: 2,
+              lg: 3,
+              xl: 4
+            }}
+          />
 
           {selectedItems.length > 1 && (
             <div className="rounded-lg border bg-muted/50 p-4">

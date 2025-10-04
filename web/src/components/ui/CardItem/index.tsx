@@ -1,23 +1,23 @@
 import { Check } from 'lucide-react'
 import { useState } from 'react'
 
-interface ItemCardProps {
+interface CardItemProps {
   id: string
-  title: string
-  description?: string
+  title: React.ReactNode
+  description?: React.ReactNode
   imageUrl?: string
   isSelected?: boolean
   onSelect?: (id: string, selected: boolean) => void
 }
 
-export default function ItemCard({ 
+export default function CardItem({ 
   id, 
   title, 
   description, 
   imageUrl, 
   isSelected = false, 
   onSelect 
-}: ItemCardProps) {
+}: CardItemProps) {
   const [selected, setSelected] = useState(isSelected)
 
   const handleClick = () => {
@@ -48,7 +48,7 @@ export default function ItemCard({
       {imageUrl ? (
         <img
           src={imageUrl}
-          alt={title}
+          alt={typeof title === 'string' ? title : 'Card image'}
           className="mb-3 h-32 w-full rounded-md object-cover"
         />
       ) : (
@@ -62,11 +62,11 @@ export default function ItemCard({
         <h3 className="font-semibold text-foreground leading-tight">
           {title}
         </h3>
-        {description && (
-          <p className="text-sm text-muted-foreground">
-            {description}
-          </p>
-        )}
+         {description && (
+           <div className="text-sm text-muted-foreground">
+             {description}
+           </div>
+         )}
       </div>
 
       {/* Hover overlay */}
