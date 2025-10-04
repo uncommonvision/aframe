@@ -1,4 +1,4 @@
-import { ChevronDown, User, Settings, LogOut } from 'lucide-react'
+import { User, Settings, LogOut } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 
 export default function UserMenu() {
@@ -22,12 +22,11 @@ export default function UserMenu() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-8 w-8"
       >
-        <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center">
           <User className="h-4 w-4 text-muted-foreground" />
         </div>
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
@@ -40,19 +39,19 @@ export default function UserMenu() {
           </div>
           <div className="my-1 h-px bg-border" />
           
-          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground text-foreground">
             <User className="mr-2 h-4 w-4" />
             Profile
           </button>
           
-          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground text-foreground">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </button>
           
           <div className="my-1 h-px bg-border" />
           
-          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground text-foreground">
             <LogOut className="mr-2 h-4 w-4" />
             Sign out
           </button>

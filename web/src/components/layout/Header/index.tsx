@@ -15,7 +15,7 @@ export default function Header() {
         {/* Left side: Logo and Title */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <Hexagon className="h-8 w-8 text-primary" />
+            <Hexagon className="h-8 w-8 text-foreground" />
             <h1 className="text-xl font-bold text-foreground">Kubey</h1>
           </div>
         </div>
