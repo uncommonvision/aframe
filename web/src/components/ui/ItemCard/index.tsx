@@ -29,19 +29,19 @@ export default function ItemCard({
   return (
     <div
       onClick={handleClick}
-      className={`tw-relative tw-group tw-cursor-pointer tw-rounded-lg tw-border tw-p-4 tw-transition-all tw-duration-200 hover:tw-shadow-md ${
+      className={`relative group cursor-pointer rounded-lg border p-4 transition-all duration-200 hover:shadow-md ${
         selected
-          ? 'tw-border-primary tw-bg-primary/5 tw-shadow-sm'
-          : 'tw-border-border hover:tw-border-primary/50'
+          ? 'border-primary bg-primary/5 shadow-sm'
+          : 'border-border hover:border-primary/50'
       }`}
     >
       {/* Selection indicator */}
-      <div className={`tw-absolute tw-top-3 tw-right-3 tw-flex tw-h-6 tw-w-6 tw-items-center tw-justify-center tw-rounded-full tw-border tw-transition-all ${
+      <div className={`absolute top-3 right-3 flex h-6 w-6 items-center justify-center rounded-full border transition-all ${
         selected
-          ? 'tw-border-primary tw-bg-primary tw-text-primary-foreground'
-          : 'tw-border-muted-foreground/30 tw-bg-background group-hover:tw-border-primary/50'
+          ? 'border-primary bg-primary text-primary-foreground'
+          : 'border-muted-foreground/30 bg-background group-hover:border-primary/50'
       }`}>
-        {selected && <Check className="tw-h-3 tw-w-3" />}
+        {selected && <Check className="h-3 w-3" />}
       </div>
 
       {/* Image placeholder */}
@@ -49,29 +49,29 @@ export default function ItemCard({
         <img
           src={imageUrl}
           alt={title}
-          className="tw-mb-3 tw-h-32 tw-w-full tw-rounded-md tw-object-cover"
+          className="mb-3 h-32 w-full rounded-md object-cover"
         />
       ) : (
-        <div className="tw-mb-3 tw-h-32 tw-w-full tw-rounded-md tw-bg-muted tw-flex tw-items-center tw-justify-center">
-          <span className="tw-text-muted-foreground tw-text-sm">No image</span>
+        <div className="mb-3 h-32 w-full rounded-md bg-muted flex items-center justify-center">
+          <span className="text-muted-foreground text-sm">No image</span>
         </div>
       )}
 
       {/* Content */}
-      <div className="tw-space-y-2">
-        <h3 className="tw-font-semibold tw-text-foreground tw-leading-tight">
+      <div className="space-y-2">
+        <h3 className="font-semibold text-foreground leading-tight">
           {title}
         </h3>
         {description && (
-          <p className="tw-text-sm tw-text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {description}
           </p>
         )}
       </div>
 
       {/* Hover overlay */}
-      <div className={`tw-absolute tw-inset-0 tw-rounded-lg tw-ring-2 tw-ring-primary tw-transition-opacity ${
-        selected ? 'tw-opacity-100' : 'tw-opacity-0 group-hover:tw-opacity-50'
+      <div className={`absolute inset-0 rounded-lg ring-2 ring-primary transition-opacity ${
+        selected ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'
       }`} />
     </div>
   )

@@ -19,41 +19,41 @@ export default function UserMenu() {
   }, [])
 
   return (
-    <div className="tw-relative" ref={menuRef}>
+    <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="tw-flex tw-items-center tw-space-x-2 tw-rounded-md tw-px-3 tw-py-2 tw-text-sm tw-font-medium tw-transition-colors hover:tw-bg-accent hover:tw-text-accent-foreground focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ring focus-visible:tw-ring-offset-2"
+        className="flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        <div className="tw-h-8 tw-w-8 tw-rounded-full tw-bg-muted tw-flex tw-items-center tw-justify-center">
-          <User className="tw-h-4 tw-w-4 tw-text-muted-foreground" />
+        <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+          <User className="h-4 w-4 text-muted-foreground" />
         </div>
-        <ChevronDown className={`tw-h-4 tw-w-4 tw-transition-transform ${isOpen ? 'tw-rotate-180' : ''}`} />
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="tw-absolute tw-right-0 tw-top-full tw-z-50 tw-mt-2 tw-w-48 tw-rounded-md tw-border tw-bg-popover tw-p-1 tw-text-popover-foreground tw-shadow-md">
-          <div className="tw-px-2 tw-py-1.5 tw-text-sm tw-font-semibold">
+        <div className="absolute right-0 top-full z-50 mt-2 w-48 rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+          <div className="px-2 py-1.5 text-sm font-semibold">
             John Doe
           </div>
-          <div className="tw-px-2 tw-py-1 tw-text-xs tw-text-muted-foreground">
+          <div className="px-2 py-1 text-xs text-muted-foreground">
             john.doe@example.com
           </div>
-          <div className="tw-my-1 tw-h-px tw-bg-border" />
+          <div className="my-1 h-px bg-border" />
           
-          <button className="tw-relative tw-flex tw-w-full tw-cursor-pointer tw-select-none tw-items-center tw-rounded-sm tw-px-2 tw-py-1.5 tw-text-sm tw-outline-none tw-transition-colors hover:tw-bg-accent hover:tw-text-accent-foreground">
-            <User className="tw-mr-2 tw-h-4 tw-w-4" />
+          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+            <User className="mr-2 h-4 w-4" />
             Profile
           </button>
           
-          <button className="tw-relative tw-flex tw-w-full tw-cursor-pointer tw-select-none tw-items-center tw-rounded-sm tw-px-2 tw-py-1.5 tw-text-sm tw-outline-none tw-transition-colors hover:tw-bg-accent hover:tw-text-accent-foreground">
-            <Settings className="tw-mr-2 tw-h-4 tw-w-4" />
+          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+            <Settings className="mr-2 h-4 w-4" />
             Settings
           </button>
           
-          <div className="tw-my-1 tw-h-px tw-bg-border" />
+          <div className="my-1 h-px bg-border" />
           
-          <button className="tw-relative tw-flex tw-w-full tw-cursor-pointer tw-select-none tw-items-center tw-rounded-sm tw-px-2 tw-py-1.5 tw-text-sm tw-outline-none tw-transition-colors hover:tw-bg-accent hover:tw-text-accent-foreground">
-            <LogOut className="tw-mr-2 tw-h-4 tw-w-4" />
+          <button className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
+            <LogOut className="mr-2 h-4 w-4" />
             Sign out
           </button>
         </div>
