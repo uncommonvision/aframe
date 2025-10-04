@@ -20,7 +20,7 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.altKey && event.key === 't') {
+      if (event.ctrlKey && event.key === 't') {
         event.preventDefault()
         toggleTheme()
       }
@@ -60,7 +60,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggleTheme}
       className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-8 w-8"
-      title={`Current theme: ${getThemeLabel()}. Click to toggle.`}
+      title={`Current theme: ${getThemeLabel()}. Click or press Ctrl+T to toggle.`}
     >
       <div className="h-8 w-8 rounded-md border border-border flex items-center justify-center hover:bg-muted cursor-pointer transition-colors">
         {getIcon()}
