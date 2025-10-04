@@ -20,7 +20,7 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === 't') {
+      if (event.altKey && event.key === 't') {
         event.preventDefault()
         toggleTheme()
       }

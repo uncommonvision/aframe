@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ThemeProvider } from "@/components/theme-provider"
 import { DefaultLayout } from "@/components/layout"
 import { CardList } from "@/containers"
+import { ComparisonBanner } from "@/components/ui"
 import type { CardData } from "@/containers"
 
 // Sample data for demonstration
@@ -58,7 +59,9 @@ function App() {
             </p>
           </div>
 
-          <CardList 
+          <ComparisonBanner selectedItems={selectedItems} />
+
+          <CardList
             items={sampleItems}
             selectedItems={selectedItems}
             onSelectionChange={handleSelectionChange}
@@ -71,17 +74,6 @@ function App() {
               xl: 4
             }}
           />
-
-          {selectedItems.length > 1 && (
-            <div className="rounded-lg border bg-muted/50 p-4">
-              <h3 className="font-semibold text-foreground mb-2">
-                Ready to Compare
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                You have selected {selectedItems.length} items. Comparison functionality will be added in future updates.
-              </p>
-            </div>
-          )}
         </div>
       </DefaultLayout>
     </ThemeProvider>

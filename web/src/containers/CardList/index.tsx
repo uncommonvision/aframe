@@ -43,24 +43,16 @@ export default function CardList({
   }, [selectedItems])
 
   const handleItemSelect = (id: string, selected: boolean) => {
-    const newSelection = selected 
+    const newSelection = selected
       ? [...internalSelection, id]
       : internalSelection.filter(itemId => itemId !== id)
-    
+
     setInternalSelection(newSelection)
     onSelectionChange?.(newSelection)
   }
 
   const getGridClasses = () => {
-    const baseClasses = "grid gap-6"
-    const colClasses = [
-      `grid-cols-${gridCols.default}`,
-      gridCols.sm && `sm:grid-cols-${gridCols.sm}`,
-      gridCols.lg && `lg:grid-cols-${gridCols.lg}`,
-      gridCols.xl && `xl:grid-cols-${gridCols.xl}`
-    ].filter(Boolean).join(' ')
-    
-    return `${baseClasses} ${colClasses}`
+    return 'grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
   }
 
   if (items.length === 0) {
@@ -73,12 +65,6 @@ export default function CardList({
 
   return (
     <div className="space-y-4">
-      {showSelectionCount && internalSelection.length > 0 && (
-        <p className="text-sm text-primary">
-          {internalSelection.length} item{internalSelection.length !== 1 ? 's' : ''} selected
-        </p>
-      )}
-      
       <div className={getGridClasses()}>
         {items.map((item) => (
           <CardItem
