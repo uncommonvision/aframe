@@ -26,14 +26,7 @@ export default function CardList({
   items,
   selectedItems = [],
   onSelectionChange,
-  showSelectionCount = false,
   emptyMessage = "No items available",
-  gridCols = {
-    default: 1,
-    sm: 2,
-    lg: 3,
-    xl: 4
-  }
 }: CardListProps) {
   const [internalSelection, setInternalSelection] = useState<string[]>(selectedItems)
 
