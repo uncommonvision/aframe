@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import Header from '../Header'
+import { KeyboardShortcutsOverlay } from '@/components/ui'
 
 interface DefaultLayoutProps {
   children: ReactNode
@@ -12,6 +13,7 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
       <main className="container mx-auto px-4 py-6 max-w-7xl">
         {children}
       </main>
+      <KeyboardShortcutsOverlay />
     </div>
   )
 }
