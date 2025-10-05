@@ -1,6 +1,7 @@
 import { Moon, Sun, Monitor } from 'lucide-react'
 import { useTheme } from '../../theme-provider'
 import { useEffect, useState } from 'react'
+import { useKeydownShortcut } from '@/hooks/useKeydownShortcut'
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme()
@@ -27,6 +28,11 @@ export default function ThemeToggle() {
       setTheme('light')
     }
   }
+
+  useKeydownShortcut(
+    { key: 't', ctrl: false, alt: false, shift: false, meta: false },
+    toggleTheme
+  )
 
   const getIcon = () => {
     if (theme === 'light') {

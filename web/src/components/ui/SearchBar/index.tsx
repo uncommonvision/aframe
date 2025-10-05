@@ -1,5 +1,6 @@
 import { Search } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
+import { useKeydownShortcut } from '@/hooks/useKeydownShortcut'
 
 interface SearchBarProps {
   placeholder?: string
@@ -32,17 +33,10 @@ export default function SearchBar({
     }
   }
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === '/' && !isFocused) {
-        event.preventDefault()
-        inputRef.current?.focus()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isFocused])
+  useKeydownShortcut(
+    { key: '/', ctrl: false, alt: false, shift: false, meta: false },
+    () => inputRef.current?.focus()
+  )
 
   return (
     <div className={`relative transition-all duration-300 ${isFocused ? 'w-full' : 'w-48'}`}>
