@@ -35,7 +35,9 @@ export default function SearchBar({
 
   useKeydownShortcut(
     { key: '/', ctrl: false, alt: false, shift: false, meta: false },
-    () => inputRef.current?.focus()
+    () => inputRef.current?.focus(),
+    'Search',
+    'Bring focus to the search field'
   )
 
   return (

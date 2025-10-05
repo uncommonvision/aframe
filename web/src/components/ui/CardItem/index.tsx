@@ -29,7 +29,7 @@ export default function CardItem({
   return (
     <div
       onClick={handleClick}
-      className={`relative group cursor-pointer rounded-lg border p-4 transition-all duration-200 hover:shadow-md ${
+      className={`relative group cursor-pointer rounded-lg border p-4 transition-all duration-200 hover:shadow-md hover:scale-105 hover:z-10 ${
         selected
           ? 'border-primary bg-primary/5 shadow-sm'
           : 'border-border hover:border-primary/50'

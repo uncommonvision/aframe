@@ -31,7 +31,9 @@ export default function ThemeToggle() {
 
   useKeydownShortcut(
     { key: 't', ctrl: false, alt: false, shift: false, meta: false },
-    toggleTheme
+    toggleTheme,
+    'Toggle Theme',
+    'Switch between light and dark mode'
   )
 
   const getIcon = () => {
