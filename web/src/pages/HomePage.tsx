@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CardList } from "@/containers"
 import { ComparisonBanner } from "@/components/ui"
 import type { CardData } from "@/containers"
+import { DefaultLayout } from "@/components/layout"
 
 const sampleItems: CardData[] = [
   {
@@ -44,31 +45,33 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          Compare Frameworks
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Select items to compare their features and capabilities.
-        </p>
+    <DefaultLayout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Compare Frameworks
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Select items to compare their features and capabilities.
+          </p>
+        </div>
+
+        <ComparisonBanner selectedItems={selectedItems} />
+
+        <CardList
+          items={sampleItems}
+          selectedItems={selectedItems}
+          onSelectionChange={handleSelectionChange}
+          showSelectionCount={true}
+          emptyMessage="No frameworks available"
+          gridCols={{
+            default: 1,
+            sm: 2,
+            lg: 3,
+            xl: 4
+          }}
+        />
       </div>
-
-      <ComparisonBanner selectedItems={selectedItems} />
-
-      <CardList
-        items={sampleItems}
-        selectedItems={selectedItems}
-        onSelectionChange={handleSelectionChange}
-        showSelectionCount={true}
-        emptyMessage="No frameworks available"
-        gridCols={{
-          default: 1,
-          sm: 2,
-          lg: 3,
-          xl: 4
-        }}
-      />
-    </div>
+    </DefaultLayout>
   )
 }
