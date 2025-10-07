@@ -1,0 +1,36 @@
+.PHONY: server-dev server-dev+ server-build server-test server-clean help
+
+server-dev:
+	@echo "Starting server in development mode..."
+	@cd server && ENVIRONMENT=development go run main.go
+
+server-dev+:
+	@echo "Starting server in development mode (publicly accessible)..."
+	@cd server && ENVIRONMENT=development HOST=0.0.0.0 go run main.go
+
+server-build:
+	@echo "Building server..."
+	@cd server && go build -o ../bin/kitchenmix-server main.go
+	@echo "Build complete: bin/kitchenmix-server"
+
+server-test:
+	@echo "Running server tests..."
+	@cd server && go test ./tests/... -v
+
+server-clean:
+	@echo "Cleaning server build artifacts..."
+	@rm -rf bin/
+	@echo "Clean complete"
+
+help:
+	@echo "Available targets:"
+	@echo ""
+	@echo "Server:"
+	@echo "  make server-dev     - Start server in development mode (localhost only)"
+	@echo "  make server-dev+    - Start server in development mode (publicly accessible)"
+	@echo "  make server-build   - Build server binary"
+	@echo "  make server-test    - Run server tests"
+	@echo "  make server-clean   - Remove server build artifacts"
+	@echo ""
+	@echo "General:"
+	@echo "  make help           - Show this help message"
