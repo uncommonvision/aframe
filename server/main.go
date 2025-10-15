@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
+	"aframe/server/internal/config"
+	"aframe/server/internal/routes"
 	"github.com/gin-gonic/gin"
-	"kitchenmix/server/internal/config"
-	"kitchenmix/server/internal/routes"
 )
 
 func main() {

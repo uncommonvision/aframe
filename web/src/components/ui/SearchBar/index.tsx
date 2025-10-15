@@ -7,9 +7,9 @@ interface SearchBarProps {
   onSearch?: (query: string) => void
 }
 
-export default function SearchBar({ 
-  placeholder = "Type / to search", 
-  onSearch 
+export default function SearchBar({
+  placeholder = "Type / to search",
+  onSearch
 }: SearchBarProps) {
   const [query, setQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -41,7 +41,7 @@ export default function SearchBar({
   )
 
   return (
-    <div className={`relative transition-all duration-300 ${isFocused ? 'w-full' : 'w-48'}`}>
+    <div className={`relative transition-all duration-300 ${isFocused ? 'w-full' : 'w-24 sm:w-32 md:w-48'}`}>
       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <input
         ref={inputRef}

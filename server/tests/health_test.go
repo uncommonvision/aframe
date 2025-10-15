@@ -6,9 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"aframe/server/internal/handlers"
+	"aframe/server/internal/routes"
 	"github.com/gin-gonic/gin"
-	"kitchenmix/server/internal/handlers"
-	"kitchenmix/server/internal/routes"
 )
 
 func TestHealthCheck(t *testing.T) {
@@ -32,9 +32,5 @@ func TestHealthCheck(t *testing.T) {
 
 	if result.Status != "healthy" {
 		t.Errorf("Expected status 'healthy', got '%s'", result.Status)
-	}
-
-	if result.Service != "kitchenmix-api" {
-		t.Errorf("Expected service 'kitchenmix-api', got '%s'", result.Service)
 	}
 }

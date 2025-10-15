@@ -1,5 +1,26 @@
 .PHONY: server-dev server-dev+ server-build server-test server-clean help
 
+web-dev:
+	@echo "Starting web in development mode..."
+	@cd web && bun run dev
+
+web-dev+:
+	@echo "Starting web in development mode (publically accessible)..."
+	@cd web && bun run dev+
+
+web-build:
+	@echo "Building web..."
+	@cd web && bun run build
+	@echo "Build complete"
+
+web-preview:
+	@echo "Starting web in preview mode..."
+	@cd web && bun run preview
+
+web-preview+:
+	@echo "Starting web in preview mode (publically accessible)..."
+	@cd web && bun run preview+
+
 server-dev:
 	@echo "Starting server in development mode..."
 	@cd server && ENVIRONMENT=development go run main.go
@@ -10,8 +31,8 @@ server-dev+:
 
 server-build:
 	@echo "Building server..."
-	@cd server && go build -o ../bin/kitchenmix-server main.go
-	@echo "Build complete: bin/kitchenmix-server"
+	@cd server && go build -o ../bin/aframe-server main.go
+	@echo "Build complete: bin/aframe-server"
 
 server-test:
 	@echo "Running server tests..."

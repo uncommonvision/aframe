@@ -15,12 +15,12 @@ interface KeyComboProps {
 
 function KeyCombo({ shortcut }: KeyComboProps) {
   const parts: string[] = []
-  
+
   if (shortcut.ctrl) parts.push('Ctrl')
   if (shortcut.alt) parts.push('Alt')
   if (shortcut.shift) parts.push('Shift')
   if (shortcut.meta) parts.push('Cmd')
-  
+
   parts.push(shortcut.key.toUpperCase())
 
   return (
@@ -47,7 +47,7 @@ export default function KeyboardShortcutsOverlay() {
   const toggleOverlay = () => setIsOpen(prev => !prev)
 
   useClickOutside(overlayRef, () => setIsOpen(false))
-  
+
   useKeydownShortcut(
     { key: '?' },
     toggleOverlay,
@@ -78,7 +78,7 @@ export default function KeyboardShortcutsOverlay() {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div
         ref={overlayRef}
-        className="w-full max-w-[650px] max-h-[350px] bg-popover border border-border rounded-lg shadow-lg overflow-hidden flex flex-col"
+        className="max-w-[85vw] md:max-w-[66.67vw] max-h-[66.67vh] bg-popover border border-border rounded-lg shadow-lg overflow-hidden flex flex-col"
       >
         <div className="px-6 py-4 border-b border-border flex items-center gap-2">
           <Keyboard className="h-5 w-5 text-muted-foreground" />
@@ -86,7 +86,7 @@ export default function KeyboardShortcutsOverlay() {
             Keyboard shortcuts
           </h2>
         </div>
-        
+
         <div className="overflow-y-auto flex-1 px-6 py-4">
           <div className="space-y-3">
             {shortcuts.length === 0 ? (
@@ -97,7 +97,7 @@ export default function KeyboardShortcutsOverlay() {
               shortcuts.map((shortcut) => (
                 <div
                   key={shortcut.id}
-                  className="flex items-start justify-between gap-4 py-2"
+                  className="flex items-start justify-between gap-4 md:gap-16 py-2"
                 >
                   <div className="flex-1">
                     <div className="font-medium text-sm text-popover-foreground">

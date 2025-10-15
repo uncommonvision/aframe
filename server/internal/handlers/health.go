@@ -17,6 +17,5 @@ func HealthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, HealthResponse{
 		Status:    "healthy",
 		Timestamp: time.Now(),
-		Service:   "kitchenmix-api",
 	})
 }
