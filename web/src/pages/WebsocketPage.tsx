@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom'
 import { useMessagingService } from '@/hooks/useMessagingService'
+import { useUserIdentity } from '@/hooks/useUserIdentity'
 import { DefaultLayout } from "@/components/layout"
 import { useEffect, useState } from 'react'
 import { Messages } from '@/containers'
-import { currentUser } from '@/stubs/messages'
+import UserNameDialog from '@/components/ui/UserNameDialog'
 
 import type { ChatMessage, MessagePayload } from '@/types'
 
@@ -12,13 +13,14 @@ import type { ChatMessage, MessagePayload } from '@/types'
 export default function WebsocketPage() {
   const { id } = useParams<{ id: string }>()
   const [messages, setMessages] = useState<ChatMessage[]>([])
+  const { user, setUser } = useUserIdentity()
 
   // Ensure we have a valid UUID before attempting connection
   const validUuid = id && id.trim() !== "" ? id : null
 
   const { connectionState, error, sendMessage, onMessage, reconnect } = useMessagingService({
     uuid: validUuid || "",
-    autoConnect: !!validUuid // Only auto-connect if we have a valid UUID
+    autoConnect: !!validUuid && !!user
   })
 
   // Handle incoming messages
@@ -56,17 +58,21 @@ export default function WebsocketPage() {
     return unsubscribe
   }, [onMessage])
 
+  const handleUserNameSubmit = (name: string) => {
+    setUser(name)
+  }
+
   const handleMessageSubmit = (text: string) => {
+    if (!user) return
+
     const messagePayload: Omit<MessagePayload, 'id' | 'sentAt'> = {
-      sender: currentUser,
-      channel: { id: 'channel-1', name: 'General' }, // Default channel
+      sender: user,
+      channel: { id: 'channel-1', name: 'General' },
       text
     }
 
-    // Send via messaging service
     sendMessage(messagePayload)
 
-    // Optimistic update - add message immediately
     const optimisticMessage: ChatMessage = {
       ...messagePayload,
       id: `temp-${Date.now()}`,
@@ -77,6 +83,8 @@ export default function WebsocketPage() {
 
   return (
     <DefaultLayout>
+      <UserNameDialog open={!user} onSubmit={handleUserNameSubmit} />
+      
       <div className="flex flex-col h-full space-y-6 pb-24">
         <div>
           <h1 className="text-3xl font-bold text-foreground">
@@ -92,8 +100,12 @@ export default function WebsocketPage() {
               </p>
             </div>
           )}
-          {validUuid && (
+          {validUuid && user && (
             <div className="flex items-center gap-2 mt-2">
+              <span className="text-xs text-muted-foreground">
+                Signed in as <span className="font-medium text-foreground">{user.name}</span>
+              </span>
+              <span className="text-xs text-muted-foreground">•</span>
               <div className={`w-2 h-2 rounded-full ${
                 connectionState === 'connected' ? 'bg-green-500' :
                 connectionState === 'connecting' ? 'bg-yellow-500 animate-pulse' :
@@ -119,13 +131,15 @@ export default function WebsocketPage() {
           )}
         </div>
 
-        <Messages
-          messages={messages}
-          currentUser={currentUser}
-          showInput={true}
-          onMessageSubmit={handleMessageSubmit}
-          inputPlaceholder="Type a message..."
-        />
+        {user && (
+          <Messages
+            messages={messages}
+            currentUser={user}
+            showInput={true}
+            onMessageSubmit={handleMessageSubmit}
+            inputPlaceholder="Type a message..."
+          />
+        )}
       </div>
     </DefaultLayout>
   )
