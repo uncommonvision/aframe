@@ -96,7 +96,7 @@ func (c *Connection) handleMessage(msg WSMessage) {
 		log.Printf("Received PING from connection %s", c.ID)
 	case MessageTypeChatMessage:
 		log.Printf("Received CHAT_MESSAGE from connection %s (uuid: %s)", c.ID, c.UUID)
-		Pool.BroadcastToUUID(c.UUID, msg)
+		Pool.BroadcastToUUIDExceptSender(c.UUID, c.ID, msg)
 	default:
 		log.Printf("Unknown message type from connection %s: %s", c.ID, msg.Type)
 	}
