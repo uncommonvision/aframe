@@ -4,7 +4,7 @@ import MessageSubmission from '@/components/ui/MessageSubmission'
 import type { ChatMessage, User } from '@/types/messages'
 import { useKeydownShortcut } from '@/hooks/useKeydownShortcut'
 
-export interface MessagesProps {
+export interface MessagesListProps {
   messages: ChatMessage[]
   currentUser: User
   emptyMessage?: string
@@ -13,14 +13,14 @@ export interface MessagesProps {
   inputPlaceholder?: string
 }
 
-export default function Messages({
+export default function MessagesList({
   messages,
   currentUser,
   emptyMessage = 'No messages',
   onMessageSubmit,
   showInput = false,
   inputPlaceholder,
-}: MessagesProps) {
+}: MessagesListProps) {
   const [timestampsVisible, setTimestampsVisible] = useState(false)
 
   useKeydownShortcut(

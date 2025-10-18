@@ -3,7 +3,7 @@ import { useMessagingService } from '@/hooks/useMessagingService'
 import { useUserIdentity } from '@/hooks/useUserIdentity'
 import { DefaultLayout } from "@/components/layout"
 import { useEffect, useState } from 'react'
-import { Messages } from '@/containers'
+import { MessagesList } from '@/components/ui'
 import UserNameDialog from '@/components/ui/UserNameDialog'
 
 import type { ChatMessage, MessagePayload } from '@/types'
@@ -132,7 +132,7 @@ export default function WebsocketPage() {
         </div>
 
         {user && (
-          <Messages
+          <MessagesList
             messages={messages}
             currentUser={user}
             showInput={true}
