@@ -8,6 +8,7 @@ import (
 const (
 	MessageTypeConnectionAck = "CONNECTION_ACK"
 	MessageTypePing          = "PING"
+	MessageTypeChatMessage   = "CHAT_MESSAGE"
 )
 
 type WSMessage struct {

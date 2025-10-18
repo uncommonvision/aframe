@@ -16,3 +16,13 @@ export interface Message {
   text: string
   sentAt: Date | string
 }
+
+export interface SystemMessage {
+  id: string
+  text: string
+  sentAt: string
+  isSystem: true
+  systemType: 'user_joined' | 'user_left' | 'error'
+}
+
+export type ChatMessage = Message | SystemMessage

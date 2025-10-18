@@ -54,7 +54,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
       websocketService.disconnect()
       connectAttemptedRef.current = false
     }
-  }, [uuid, autoConnect, onConnectionChange])
+  }, [uuid, autoConnect, onConnectionChange, isConnected])
 
   const subscribe = <T>(type: WSMessageType, handler: MessageHandler<T>) => {
     websocketService.on(type, handler)

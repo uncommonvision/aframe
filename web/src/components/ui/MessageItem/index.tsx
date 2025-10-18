@@ -1,10 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
-import type { Message } from '@/types/messages'
+import type { ChatMessage } from '@/types/messages'
 import { format } from 'date-fns'
 
 export interface MessageItemProps {
-  message: Message
+  message: ChatMessage
   isCurrentUser: boolean
   showTimestamp: boolean
 }
@@ -22,21 +22,43 @@ export default function MessageItem({
   isCurrentUser,
   showTimestamp,
 }: MessageItemProps) {
+  // Handle system messages
+  if ('isSystem' in message && message.isSystem) {
+    return (
+      <div className="flex flex-col gap-1">
+        <div className="flex justify-center w-full">
+          <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">
+            {message.text}
+          </span>
+        </div>
+        {showTimestamp && (
+          <div className="flex justify-center w-full">
+            <span className="text-xs text-muted-foreground">
+              {format(new Date(message.sentAt), 'MMM d, yyyy h:mm a')}
+            </span>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Handle regular messages
+  const msg = message as Exclude<ChatMessage, { isSystem: true }>
   return (
     <div className="flex flex-col gap-1">
       <div className={`flex gap-3 ${isCurrentUser ? 'flex-row-reverse' : 'flex-row'}`}>
         <div className="w-10 shrink-0" />
         <span className={`text-xs font-medium text-foreground ${isCurrentUser ? 'text-right pr-3' : 'text-left pl-3'}`}>
-          {message.sender.name}
+          {msg.sender.name}
         </span>
       </div>
 
       <div className={`flex gap-3 ${isCurrentUser ? 'flex-row-reverse' : 'flex-row'} items-end`}>
         <Avatar className="h-10 w-10 shrink-0">
-          {message.sender.imageUrl && (
-            <AvatarImage src={message.sender.imageUrl} alt={message.sender.name} />
+          {msg.sender.imageUrl && (
+            <AvatarImage src={msg.sender.imageUrl} alt={msg.sender.name} />
           )}
-          <AvatarFallback>{getInitials(message.sender.name)}</AvatarFallback>
+          <AvatarFallback>{getInitials(msg.sender.name)}</AvatarFallback>
         </Avatar>
 
         <div className="flex flex-col gap-0">
@@ -49,14 +71,14 @@ export default function MessageItem({
           >
             <CardContent className="p-3">
               <p className="text-sm whitespace-pre-wrap break-words">
-                {message.text}
+                {msg.text}
               </p>
             </CardContent>
           </Card>
 
           <div className={`w-2 h-4 -mt-1.5 ${isCurrentUser ? 'self-end -mr-1 -rotate-[30deg]' : 'self-start -ml-1 rotate-[30deg]'}`}>
             <svg viewBox="0 0 10 20" className="w-full h-full" preserveAspectRatio="none">
-              <polygon 
+              <polygon
                 points={isCurrentUser ? "0,0 10,0 10,12" : "0,0 10,0 0,12"}
                 className={isCurrentUser ? "fill-primary stroke-primary" : "fill-muted stroke-border/30"}
                 strokeWidth="1"
@@ -69,7 +91,7 @@ export default function MessageItem({
       {showTimestamp && (
         <div className="flex justify-center w-full">
           <span className="text-xs text-muted-foreground">
-            {format(new Date(message.sentAt), 'MMM d, yyyy h:mm a')}
+            {format(new Date(msg.sentAt), 'MMM d, yyyy h:mm a')}
           </span>
         </div>
       )}

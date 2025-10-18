@@ -1,6 +1,12 @@
 export type WSMessageType =
   | 'CONNECTION_ACK'
   | 'GENERIC_DATA'
+  | 'CHAT_MESSAGE'
+
+export interface ConnectionAckData {
+  id: string
+  message: string
+}
 
 export interface WSMessage<T = unknown> {
   type: WSMessageType
@@ -9,29 +15,34 @@ export interface WSMessage<T = unknown> {
 }
 
 export interface GenericPayload {
-  data: any
+  data: unknown
   status: string
   queued_at: string
 }
 
 export type MessageHandler<T = unknown> = (data: T) => void
 
+export type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error'
+
+export type StateChangeHandler = (state: ConnectionState) => void
+
 export interface WebSocketConnection {
-  connect: (mixId: string) => Promise<void>
+  connect: (uuid: string) => Promise<void>
   disconnect: () => void
+  send: <T>(type: WSMessageType, data: T) => void
   on: <T>(type: WSMessageType, handler: MessageHandler<T>) => () => void
   off: <T>(type: WSMessageType, handler: MessageHandler<T>) => void
   isConnected: () => boolean
+  getConnectionState: () => ConnectionState
+  onStateChange: (handler: StateChangeHandler) => () => void
 }
 
 function createWebSocketConnection(): WebSocketConnection {
   let ws: WebSocket | null = null
-  let id: string | null = null
-  let reconnectAttempts = 0
-  const maxReconnectAttempts = 5
-  const reconnectDelay = 1000
+  let currentUuid: string | null = null
+  let connectionState: ConnectionState = 'disconnected'
   const handlers = new Map<WSMessageType, Set<MessageHandler>>()
-  let isIntentionallyClosed = false
+  const stateChangeHandlers = new Set<StateChangeHandler>()
 
   const handleMessage = (event: MessageEvent) => {
     try {
@@ -52,54 +63,44 @@ function createWebSocketConnection(): WebSocketConnection {
     }
   }
 
-  const setupEventListeners = () => {
-    if (!ws) return
-
-    ws.addEventListener('message', handleMessage)
-
-    ws.addEventListener('open', () => {
-      console.log('WebSocket connected')
-      reconnectAttempts = 0
-    })
-
-    ws.addEventListener('close', () => {
-      console.log('WebSocket closed')
-      if (!isIntentionallyClosed && reconnectAttempts < maxReconnectAttempts) {
-        setTimeout(() => reconnect(), reconnectDelay * Math.pow(2, reconnectAttempts))
-        reconnectAttempts++
-      }
-    })
-
-    ws.addEventListener('error', (error) => {
-      console.error('WebSocket error:', error)
-    })
-  }
-
-  const reconnect = () => {
-    if (id && !isIntentionallyClosed) {
-      connect(id)
-    }
-  }
-
-  const connect = (newId: string): Promise<void> => {
+  const connect = (uuid: string): Promise<void> => {
     return new Promise((resolve, reject) => {
-      if (ws?.readyState === WebSocket.OPEN) {
+      // If already connected/connecting to the same UUID, don't reconnect
+      if (currentUuid === uuid && ws && (ws.readyState === WebSocket.CONNECTING || ws.readyState === WebSocket.OPEN)) {
         resolve()
         return
       }
 
-      id = newId
-      isIntentionallyClosed = false
+      // Close old connection if exists and connecting to different UUID
+      if (ws) {
+        ws.close()
+        ws = null
+      }
 
+      currentUuid = uuid
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-      const wsUrl = `${protocol}//localhost:8080/api/v1/ws/${id}`
+      const wsUrl = `${protocol}//${window.location.host}/api/v1/ws/${uuid}`
+
+      notifyStateChange('connecting')
 
       try {
         ws = new WebSocket(wsUrl)
-        setupEventListeners()
 
-        ws.addEventListener('open', () => resolve(), { once: true })
-        ws.addEventListener('error', (error) => reject(error), { once: true })
+        ws.addEventListener('message', handleMessage)
+
+        ws.addEventListener('open', () => {
+          notifyStateChange('connected')
+          resolve()
+        }, { once: true })
+
+        ws.addEventListener('error', (error) => {
+          notifyStateChange('error')
+          reject(error)
+        }, { once: true })
+
+        ws.addEventListener('close', (event) => {
+          notifyStateChange(event.wasClean ? 'disconnected' : 'error')
+        })
       } catch (error) {
         reject(error)
       }
@@ -107,12 +108,30 @@ function createWebSocketConnection(): WebSocketConnection {
   }
 
   const disconnect = () => {
-    isIntentionallyClosed = true
     if (ws) {
       ws.close()
       ws = null
     }
-    id = null
+    currentUuid = null
+    notifyStateChange('disconnected')
+  }
+
+  const send = <T>(type: WSMessageType, data: T): void => {
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      throw new Error('WebSocket not connected')
+    }
+
+    const message: WSMessage<T> = {
+      type,
+      timestamp: new Date().toISOString(),
+      data
+    }
+
+    ws.send(JSON.stringify(message))
+  }
+
+  const isConnected = (): boolean => {
+    return ws?.readyState === WebSocket.OPEN
   }
 
   const on = <T>(type: WSMessageType, handler: MessageHandler<T>): (() => void) => {
@@ -131,17 +150,45 @@ function createWebSocketConnection(): WebSocketConnection {
     }
   }
 
-  const isConnected = (): boolean => {
-    return ws?.readyState === WebSocket.OPEN
+  const notifyStateChange = (newState: ConnectionState) => {
+    if (connectionState !== newState) {
+      connectionState = newState
+      stateChangeHandlers.forEach(handler => {
+        try {
+          handler(newState)
+        } catch (error) {
+          console.error('Error in state change handler:', error)
+        }
+      })
+    }
+  }
+
+  const getConnectionState = (): ConnectionState => {
+    return connectionState
+  }
+
+  const onStateChange = (handler: StateChangeHandler): (() => void) => {
+    stateChangeHandlers.add(handler)
+    return () => {
+      stateChangeHandlers.delete(handler)
+    }
   }
 
   return {
     connect,
     disconnect,
+    send,
     on,
     off,
-    isConnected
+    isConnected,
+    getConnectionState,
+    onStateChange
   }
 }
 
 export const websocketService = createWebSocketConnection()
+
+// Helper function to handle connection acknowledgment
+export const handleConnectionAck = (callback: (data: ConnectionAckData) => void) => {
+  return websocketService.on('CONNECTION_ACK', callback)
+}
