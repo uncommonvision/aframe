@@ -40,6 +40,7 @@ export default function UserNameDialog({ open, onSubmit }: UserNameDialogProps) 
               placeholder="Your name"
               autoFocus
               required
+              data-1p-ignore
             />
           </div>
           
