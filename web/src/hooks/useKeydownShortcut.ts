@@ -72,6 +72,9 @@ export function useKeydownShortcut(
       if (isInputFocused) return
 
       event.preventDefault()
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur()
+      }
       callback()
     }
 
