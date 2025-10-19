@@ -8,6 +8,9 @@ import (
 const (
 	MessageTypeConnectionAck = "CONNECTION_ACK"
 	MessageTypePing          = "PING"
+	MessageTypeUserIdentify  = "USER_IDENTIFY"
+	MessageTypeUserJoined    = "USER_JOINED"
+	MessageTypeUserLeft      = "USER_LEFT"
 	MessageTypeChatMessage   = "CHAT_MESSAGE"
 )
 
@@ -28,4 +31,21 @@ func NewMessage(messageType string, data interface{}) (WSMessage, error) {
 		Timestamp: time.Now(),
 		Data:      jsonData,
 	}, nil
+}
+
+type UserIdentifyPayload struct {
+	UserID   string `json:"userId"`
+	UserName string `json:"userName"`
+}
+
+type UserJoinedPayload struct {
+	UserID    string `json:"userId"`
+	UserName  string `json:"userName"`
+	SessionID string `json:"sessionId"`
+}
+
+type UserLeftPayload struct {
+	UserID    string `json:"userId"`
+	UserName  string `json:"userName"`
+	SessionID string `json:"sessionId"`
 }

@@ -23,31 +23,43 @@ export default function WebsocketPage() {
     autoConnect: !!validUuid && !!user
   })
 
+  // Send USER_IDENTIFY message when connected
+  useEffect(() => {
+    if (connectionState === 'connected' && user) {
+      import('@/services/websocket').then(({ websocketService }) => {
+        websocketService.send('USER_IDENTIFY', {
+          userId: user.id,
+          userName: user.name
+        })
+      })
+    }
+  }, [connectionState, user])
+
   // Handle incoming messages
   useEffect(() => {
     const unsubscribe = onMessage((wsMessage) => {
       switch (wsMessage.type) {
-        case 'message':
+        case 'MESSAGE':
           setMessages(prev => [...prev, wsMessage.payload])
           break
-        case 'user_joined': {
+        case 'USER_JOINED': {
           const joinMessage: ChatMessage = {
             id: `system-${Date.now()}`,
             text: `${wsMessage.payload.user.name} joined the chat`,
             sentAt: wsMessage.timestamp,
             isSystem: true,
-            systemType: 'user_joined'
+            systemType: 'USER_JOINED'
           }
           setMessages(prev => [...prev, joinMessage])
           break
         }
-        case 'user_left': {
+        case 'USER_LEFT': {
           const leaveMessage: ChatMessage = {
             id: `system-${Date.now()}`,
             text: `${wsMessage.payload.user.name} left the chat`,
             sentAt: wsMessage.timestamp,
             isSystem: true,
-            systemType: 'user_left'
+            systemType: 'USER_LEFT'
           }
           setMessages(prev => [...prev, leaveMessage])
           break

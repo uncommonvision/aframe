@@ -22,7 +22,7 @@ export interface SystemMessage {
   text: string
   sentAt: string
   isSystem: true
-  systemType: 'user_joined' | 'user_left' | 'error'
+  systemType: 'USER_JOINED' | 'USER_LEFT' | 'ERROR'
 }
 
 export type ChatMessage = Message | SystemMessage

@@ -1,6 +1,9 @@
 export type WSMessageType =
   | 'CONNECTION_ACK'
   | 'GENERIC_DATA'
+  | 'USER_IDENTIFY'
+  | 'USER_JOINED'
+  | 'USER_LEFT'
   | 'CHAT_MESSAGE'
 
 export interface ConnectionAckData {
@@ -18,6 +21,11 @@ export interface GenericPayload {
   data: unknown
   status: string
   queued_at: string
+}
+
+export interface UserIdentifyPayload {
+  userId: string
+  userName: string
 }
 
 export type MessageHandler<T = unknown> = (data: T) => void

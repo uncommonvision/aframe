@@ -32,11 +32,28 @@ func (p *ConnectionPool) Register(conn *Connection) {
 
 func (p *ConnectionPool) Unregister(connID string) {
 	p.mu.Lock()
-	defer p.mu.Unlock()
 
 	conn, exists := p.connections[connID]
 	if !exists {
+		p.mu.Unlock()
 		return
+	}
+
+	if conn.Status == "Active" {
+		leavePayload := UserLeftPayload{
+			UserID:    conn.UserID,
+			UserName:  conn.UserName,
+			SessionID: conn.UUID,
+		}
+		leaveMsg, err := NewMessage(MessageTypeUserLeft, leavePayload)
+		if err != nil {
+			log.Printf("Failed to create USER_LEFT message: %v", err)
+		} else {
+			p.mu.Unlock()
+			p.BroadcastToUUIDExceptSender(conn.UUID, connID, leaveMsg)
+			log.Printf("Broadcast USER_LEFT for user %s from session %s", conn.UserName, conn.UUID)
+			p.mu.Lock()
+		}
 	}
 
 	delete(p.connections, connID)
@@ -56,6 +73,7 @@ func (p *ConnectionPool) Unregister(connID string) {
 	close(conn.Send)
 
 	log.Printf("WebSocket connection unregistered: %s (uuid: %s)", connID, conn.UUID)
+	p.mu.Unlock()
 }
 
 func (p *ConnectionPool) BroadcastToUUID(uuid string, message WSMessage) {
@@ -92,6 +110,9 @@ func (p *ConnectionPool) BroadcastToUUIDExceptSender(uuid string, excludeConnID 
 	sent := 0
 	for _, conn := range connections {
 		if conn.ID == excludeConnID {
+			continue
+		}
+		if conn.Status != "Active" {
 			continue
 		}
 		select {

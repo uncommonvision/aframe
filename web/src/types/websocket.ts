@@ -7,25 +7,25 @@ export type WebSocketMessage =
   | ErrorEvent
 
 export interface MessageEvent {
-  type: 'message'
+  type: 'MESSAGE'
   payload: MessagePayload
   timestamp: string
 }
 
 export interface UserJoinedEvent {
-  type: 'user_joined'
+  type: 'USER_JOINED'
   payload: UserEventPayload
   timestamp: string
 }
 
 export interface UserLeftEvent {
-  type: 'user_left'
+  type: 'USER_LEFT'
   payload: UserEventPayload
   timestamp: string
 }
 
 export interface ErrorEvent {
-  type: 'error'
+  type: 'ERROR'
   payload: ErrorPayload
   timestamp: string
 }

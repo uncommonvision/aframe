@@ -82,7 +82,7 @@ export function useMessagingService(options: UseMessagingServiceOptions): UseMes
     }
 
     const chatMessage: WebSocketMessage = {
-      type: 'message',
+      type: 'MESSAGE',
       payload: {
         ...message,
         id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -95,13 +95,57 @@ export function useMessagingService(options: UseMessagingServiceOptions): UseMes
   }
 
   const onMessage = useCallback((callback: (message: WebSocketMessage) => void) => {
-    return websocketService.on('CHAT_MESSAGE', (data: WebSocketMessage) => {
+    const unsubscribeChatMessage = websocketService.on('CHAT_MESSAGE', (data: WebSocketMessage) => {
       try {
         callback(data)
       } catch (error) {
         console.error('Error in messaging callback:', error)
       }
     })
+
+    const unsubscribeUserJoined = websocketService.on('USER_JOINED', (data: any) => {
+      try {
+        const userJoinedEvent: WebSocketMessage = {
+          type: 'USER_JOINED',
+          payload: {
+            user: {
+              id: data.userId,
+              name: data.userName
+            },
+            channelId: data.sessionId
+          },
+          timestamp: new Date().toISOString()
+        }
+        callback(userJoinedEvent)
+      } catch (error) {
+        console.error('Error in user joined callback:', error)
+      }
+    })
+
+    const unsubscribeUserLeft = websocketService.on('USER_LEFT', (data: any) => {
+      try {
+        const userLeftEvent: WebSocketMessage = {
+          type: 'USER_LEFT',
+          payload: {
+            user: {
+              id: data.userId,
+              name: data.userName
+            },
+            channelId: data.sessionId
+          },
+          timestamp: new Date().toISOString()
+        }
+        callback(userLeftEvent)
+      } catch (error) {
+        console.error('Error in user left callback:', error)
+      }
+    })
+
+    return () => {
+      unsubscribeChatMessage()
+      unsubscribeUserJoined()
+      unsubscribeUserLeft()
+    }
   }, [])
 
   return {
