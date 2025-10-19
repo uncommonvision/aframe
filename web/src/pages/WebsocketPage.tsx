@@ -100,11 +100,8 @@ export default function WebsocketPage() {
       <div className="flex flex-col h-full space-y-6 pb-24">
         <div>
           <h1 className="text-3xl font-bold text-foreground">
-            Websocket Example
+            Websocket Chat Demo
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Watch the websocket
-          </p>
           {!validUuid && (
             <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
               <p className="text-xs text-yellow-800">
