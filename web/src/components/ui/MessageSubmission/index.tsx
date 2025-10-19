@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { useKeydownShortcut } from '@/hooks/useKeydownShortcut'
 
 export interface MessageSubmissionProps {
   onSubmit: (message: string) => void
@@ -10,6 +11,14 @@ export default function MessageSubmission({
   placeholder = "Type a message..."
 }: MessageSubmissionProps) {
   const [message, setMessage] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useKeydownShortcut(
+    { key: 'm', ctrl: false, alt: false, shift: false, meta: false },
+    () => textareaRef.current?.focus(),
+    'Focus Message Input',
+    'Focus on the message input field'
+  )
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,6 +40,7 @@ export default function MessageSubmission({
       <form onSubmit={handleSubmit}>
         <div className="grid">
           <textarea
+            ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}

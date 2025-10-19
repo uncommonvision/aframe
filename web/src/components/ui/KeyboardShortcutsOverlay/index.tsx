@@ -87,7 +87,7 @@ export default function KeyboardShortcutsOverlay() {
           </h2>
         </div>
 
-        <div className="overflow-y-auto flex-1 px-6 py-4">
+        <div className="overflow-y-auto flex-1 px-6 py-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-transparent">
           <div className="space-y-3">
             {shortcuts.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">
