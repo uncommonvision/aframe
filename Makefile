@@ -23,20 +23,20 @@ web-preview+:
 
 server-dev:
 	@echo "Starting server in development mode..."
-	@cd server && ENVIRONMENT=development go run main.go
+	@cd api && ENVIRONMENT=development go run main.go
 
 server-dev+:
 	@echo "Starting server in development mode (publicly accessible)..."
-	@cd server && ENVIRONMENT=development HOST=0.0.0.0 go run main.go
+	@cd api && ENVIRONMENT=development HOST=0.0.0.0 go run main.go
 
 server-build:
 	@echo "Building server..."
-	@cd server && go build -o ../bin/aframe-server main.go
+	@cd api && go build -o ../bin/aframe-server main.go
 	@echo "Build complete: bin/aframe-server"
 
 server-test:
 	@echo "Running server tests..."
-	@cd server && go test ./tests/... -v
+	@cd api && go test ./tests/... -v
 
 server-clean:
 	@echo "Cleaning server build artifacts..."
