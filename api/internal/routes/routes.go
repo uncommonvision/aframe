@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"aframe/server/internal/handlers"
-	wsHandlers "aframe/server/internal/handlers/websocket"
-	"aframe/server/internal/middleware"
+	"aframe/api/internal/handlers"
+	wsHandlers "aframe/api/internal/handlers/websocket"
+	"aframe/api/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
 

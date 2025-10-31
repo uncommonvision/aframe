@@ -1,4 +1,4 @@
-module aframe/server
+module aframe/api
 
 go 1.25.0
 

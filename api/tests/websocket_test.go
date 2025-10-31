@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"aframe/server/internal/routes"
+	"aframe/api/internal/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
