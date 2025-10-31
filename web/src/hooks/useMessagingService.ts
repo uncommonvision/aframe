@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { websocketService, handleConnectionAck, type ConnectionAckData, type ConnectionState } from '@/services/websocket'
+import { websocketService, handleConnectionAck, type ConnectionState } from '@/services/websocket'
 import type { WebSocketMessage, MessagePayload } from '@/types'
 
 interface UseMessagingServiceOptions {
@@ -20,10 +20,10 @@ interface UseMessagingServiceReturn {
 
 export function useMessagingService(options: UseMessagingServiceOptions): UseMessagingServiceReturn {
   const { uuid, autoConnect = true, onConnectionChange } = options
-  
+
   const [error, setError] = useState<Error | null>(null)
   const [, forceUpdate] = useState({})
-  
+
   const onConnectionChangeRef = useRef(onConnectionChange)
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export function useMessagingService(options: UseMessagingServiceOptions): UseMes
   const isConnected = websocketService.isConnected()
 
   useEffect(() => {
-    const unsubscribeAck = handleConnectionAck(() => {})
+    const unsubscribeAck = handleConnectionAck(() => { })
 
     return unsubscribeAck
   }, [])
