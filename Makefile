@@ -20,8 +20,7 @@ help:
 	@echo "Makefile targets:"
 	@echo "  api-deps       – download Go module dependencies"
 	@echo "  api-build      – compile the API binary"
-	@echo "  api-dev        – run API in development mode (localhost only)"
-	@echo "  api-dev+       – run API in development mode on 0.0.0.0"
+	@echo "  api-dev        – run API in development mode"
 	@echo "  api-run        - run API with compiled binary (localhost only)"
 	@echo "  api-run+       - run API with compiled binary on 0.0.0.0"
 	@echo "  api-test       – run Go tests"
@@ -39,101 +38,118 @@ help:
 	@echo "  help           – show this help"
 
 # ==== API (backend) targets ======================================
-.PHONY: api-deps api-build api-dev api-dev+ api-clean api-test
+.PHONY: api-build api-clean api-deps api-dev api-preview api-test
 
-api-deps:
+api-build: api-prod-deps
+	@set -a && . ./env/api.prod.env && set +a && cd api && $(GO) build -o bin/$(BINARY) ./cmd/api/main.go
+
+api-clean:
+	@rm -f ./api/bin/$(BINARY)
+
+api-dev-deps:
+	@if [ ! -f "./env/api.dev.env" ]; then \
+		echo "api.dev.env file is missing. use the following command then edit"; \
+		echo "the environment variables as neded."; \
+		echo ""; \
+		echo "cp env/api.env.example env/api.dev.env"; \
+		echo ""; \
+		exit 0; \
+	fi
+	@set -a && . ./env/api.dev.env && set +a && cd api && $(GO) mod download
+
+api-prod-deps:
+	@if [ ! -f "./env/api.prod.env" ]; then \
+		echo "api.prod.env file is missing. use the following command then edit"; \
+		echo "the environment variables as neded."; \
+		echo ""; \
+		echo "cp env/api.env.example env/api.prod.env"; \
+		echo ""; \
+		exit 0; \
+	fi
+	@set -a && . ./env/api.dev.env && set +a && cd api && $(GO) mod download
+
+api-test-deps:
+	@if [ ! -f "./env/api.test.env" ]; then \
+		echo "api.test.env file is missing. use the following command then edit"; \
+		echo "the environment variables as neded."; \
+		echo ""; \
+		echo "cp env/api.env.example env/api.test.env"; \
+		echo ""; \
+		exit 0; \
+	fi
+	@set -a && . ./env/api.dev.env && set +a && cd api && $(GO) mod download
+api-dev: api-dev-deps
+	@set -a && . ./env/api.dev.env && set +a && cd api && $(GO) run ./cmd/api/main.go
+
+api-preview: api-build
+	@set -a && . ./env/api.prod.env && set +a && cd api && ./bin/$(BINARY)
+
+api-test: api-test-deps
 	@echo -n "🔍 Checking for gotestsum"
 	@if ! command -v gotestsum >/dev/null 2>&1; then \
 		echo ""; \
-		echo "❗ gotestsum is not installed."; \
+		echo "gotestsum is not installed."; \
 		echo "   Install it with:"; \
 		echo "       go install github.com/gotestyourself/gotestsum@latest"; \
 		exit 1; \
 	else \
 		echo " ☑ installed"; \
 	fi
-	@cd api && $(GO) mod download
-	@echo "all packages ☑ installed"
-
-api-build: api-deps
-	@cd api && $(GO) build -o bin/$(BINARY) ./cmd/api/main.go
-
-api-dev: api-deps
-	@cd api && $(GO) run ./cmd/api/main.go
-
-api-dev+: api-deps
-	@cd api && HOST=0.0.0.0 $(GO) run ./cmd/api/main.go
-
-api-clean:
-	@rm -f ./api/bin/$(BINARY)
-
-api-run: api-build
-	@cd api && ./bin/$(BINARY)
-
-api-run+: api-build
-	@cd api && HOST=0.0.0.0 ./bin/$(BINARY)
-
-api-test:
-	@cd api && gotestsum --format testname -- ./...
+	@set -a && . ./env/api.test.env && set +a && cd api && gotestsum --format testname -- ./...
 
 # ==== WEB (frontend) targets =====================================
-.PHONY: web-deps web-dev web-dev+ web-build web-preview web-preview+ web-clean web-test
+.PHONY: web-clean web-clean web-deps web-dev web-dev+ web-preview web-test
 
-web-deps:
-	@cd web && $(BUN) install
-
-# Development server – localhost only (default)
-web-dev: web-deps
-	@cd web && $(BUN_RUN) dev
-
-
-# Development server – listen on all interfaces (0.0.0.0)
-web-dev+: web-deps
-	@cd web && $(BUN_RUN) dev --host 0.0.0.0
-
-# Production build
 web-build: web-deps
-	@cd web && $(BUN_RUN) build
-
-# Preview the production build (localhost only)
-web-preview: web-build
-	@cd web && $(BUN_RUN) preview
-
-# Preview the production build on all interfaces
-web-preview+: web-build
-	@cd web && $(BUN_RUN) preview --host 0.0.0.0
+	@set -a && . ./env/web.prod.env && set +a && cd web && $(BUN_RUN) build
 
 web-clean:
 	@rm -rf web/node_modules web/dist
 
-# Run web test suite (assumes a "test" script in package.json)
+web-deps:
+	@set -a && . ./env/web.dev.env && set +a && cd web && $(BUN) install
+
+web-dev: web-deps
+	@set -a && . ./env/web.dev.env && set +a && cd web && $(BUN_RUN) dev
+
+web-dev+: web-deps
+	@set -a && . ./env/web.dev.env && set +a && cd web && $(BUN_RUN) dev --host 0.0.0.0
+
+web-preview: web-build
+	@set -a && . ./env/web.prod.env && set +a && cd web && $(BUN_RUN) preview
+
+web-preview+: web-build
+	@set -a && . ./env/web.prod.env && set +a && cd web && $(BUN_RUN) preview --host 0.0.0.0
+
 web-test:
-	@cd web && $(BUN_RUN) test
+	@set -a && . ./env/web.test.env && set +a && cd web && $(BUN_RUN) test
 
 # ==== Convenience targets =========================================
-.PHONY: dev start clean
+.PHONY: clean dev dev+ preview preview+
 
-# Run both API and web dev servers concurrently
-dev:
-	@echo "🚀 Starting API and Web dev servers..."
-	@$(MAKE) api-dev &    # launch API in background
-	@$(MAKE) web-dev &    # launch Web in background
-	@wait                 # block until *both* child jobs finish
-
-# Run both API and web dev servers concurrently (0.0.0.0)
-dev+:
-	@echo "🚀 Starting API and Web dev servers..."
-	@$(MAKE) api-dev+ &    # launch API in background
-	@$(MAKE) web-dev+ &    # launch Web in background
-	@wait                 # block until *both* child jobs finish
-
-# Build both and serve the production UI (good for Docker / prod)
-start: api-build web-build
-	@echo "🚀 Starting API and Web preview+ servers..."
-	@$(MAKE) api-run+ &    # launch API in background
-	@$(MAKE) web-preview+ &    # launch Web in background
-	@wait                 # block until *both* child jobs finish
-
-# Clean everything
 clean: api-clean web-clean
 	@echo "🚀 All build artifacts removed"
+
+dev:
+	@echo "🚀 Starting API and Web dev servers..."
+	@$(MAKE) api-dev &
+	@$(MAKE) web-dev &
+	@wait # block until *both* child jobs finish
+
+dev+:
+	@echo "🚀 Starting API and Web dev servers..."
+	@$(MAKE) api-dev &
+	@$(MAKE) web-dev+ &
+	@wait # block until *both* child jobs finish
+
+preview: api-build web-build
+	@echo "🚀 Starting API and Web preview+ servers..."
+	@$(MAKE) api-preview &
+	@$(MAKE) web-preview &
+	@wait # block until *both* child jobs finish
+
+preview+: api-build web-build
+	@echo "🚀 Starting API and Web preview+ servers..."
+	@$(MAKE) api-preview &
+	@$(MAKE) web-preview+ &
+	@wait # block until *both* child jobs finish
