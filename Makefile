@@ -20,8 +20,10 @@ help:
 	@echo "Makefile targets:"
 	@echo "  api-deps       – download Go module dependencies"
 	@echo "  api-build      – compile the API binary"
-	@echo "  api-dev        – run API in development mode"
+	@echo "  api-dev        – run API in development mode (localhost only)"
 	@echo "  api-dev+       – run API in development mode on 0.0.0.0"
+	@echo "  api-run        - run API with compiled binary (localhost only)"
+	@echo "  api-run+       - run API with compiled binary on 0.0.0.0"
 	@echo "  api-test       – run Go tests"
 	@echo "  web-deps       – install bun dependencies"
 	@echo "  web-dev        – start Vite dev server (localhost only)"
@@ -30,7 +32,8 @@ help:
 	@echo "  web-preview    – preview built UI (localhost only)"
 	@echo "  web-preview+   – preview built UI on 0.0.0.0"
 	@echo "  web-test       – run frontend test suite"
-	@echo "  dev            – run API + web dev servers concurrently"
+	@echo "  dev            – run API + web dev servers concurrently (localhost only)"
+	@echo "  dev+           – run API + web dev servers concurrently on 0.0.0.0"
 	@echo "  start          – build both and serve production UI"
 	@echo "  clean          – remove all generated files"
 	@echo "  help           – show this help"
@@ -126,13 +129,6 @@ dev+:
 
 # Build both and serve the production UI (good for Docker / prod)
 start: api-build web-build
-	@echo "🚀 Starting API and Web preview servers..."
-	@$(MAKE) api-run &    # launch API in background
-	@$(MAKE) web-preview &    # launch Web in background
-	@wait                 # block until *both* child jobs finish
-
-# Build both and serve the production UI (good for Docker / prod) (0.0.0.0)
-start+: api-build web-build
 	@echo "🚀 Starting API and Web preview+ servers..."
 	@$(MAKE) api-run+ &    # launch API in background
 	@$(MAKE) web-preview+ &    # launch Web in background
